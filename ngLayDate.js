@@ -1,8 +1,8 @@
 if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports) {
-    module.exports = 'ngcLayDate';
+    module.exports = 'ngLayDate';
 }
-angular.module('ngcLayDate', [])
-    .directive('ngcLayDate', function ($timeout) {
+angular.module('ngLayDate', [])
+    .directive('ngLayDate', function ($timeout) {
         return {
             require: '?ngModel',
             restrict: 'A',
@@ -14,10 +14,11 @@ angular.module('ngcLayDate', [])
                     _config = {};
                 // 渲染模板完成后执行
                 $timeout(function () {
-                    //console.log(element);
                     // 初始化参数
+                    //console.log(attr.range)
                     _config = {
                         elem: element[0],
+                        value: ngModel.$modelValue && ngModel.$modelValue.startDate && ngModel.$modelValue.endDate ? ngModel.$modelValue.startDate + ' ' + (attr.range !== undefined && attr.range !== '' ? attr.range : '~') + ' ' + ngModel.$modelValue.endDate : ngModel.$modelValue ? ngModel.$modelValue : '',
                         format: attr.format !== undefined && attr.format !== '' ? attr.format : 'yyyy-MM-dd',
                         range: attr.range !== undefined && attr.range !== '' ? attr.range : false,
                         type: attr.format !== undefined && attr.format !== '' && attr.format === 'yyyy-MM-dd HH:mm:ss' ? 'datetime' : attr.format === 'yyyy' ? 'year' : attr.format === 'yyyy-MM' ? 'month' : attr.format === 'HH:mm:ss' ? 'time' : 'date',
@@ -32,8 +33,8 @@ angular.module('ngcLayDate', [])
                             if (this.range) {
                                 i = value.indexOf(this.range);
                                 ngModel.$setViewValue({
-                                    startDate: new Date(value.substring(0, i).trim()),
-                                    endDate: new Date(value.substring(i + 1).trim())
+                                    startDate: value.substring(0, i).trim(),
+                                    endDate: value.substring(i + 1).trim()
                                 });
                             } else {
                                 ngModel.$setViewValue(value);
@@ -61,26 +62,6 @@ angular.module('ngcLayDate', [])
                             _config.min = val;
                         })
                     }
-
-                    // 模型值同步到视图上
-                    ngModel.$render = function () {
-                        element.val(ngModel.$viewValue || '');
-                    };
-
-                    // 监听元素上的事件
-                    /*element.on('blur keyup change', function() {
-                        scope.$apply(setViewValue);
-                    });
-
-                    //setViewValue();
-
-                    // 更新模型上的视图值
-                    function setViewValue() {
-                        console.log(element)
-                        var val = element[0].value;
-                        console.log(val)
-                        ngModel.$setViewValue(val);
-                    }*/
                 }, 0);
             }
         };
