@@ -1,0 +1,6 @@
+.idea
+node_modules
+文档
+npm-debug.*
+_test-output
+_temp
