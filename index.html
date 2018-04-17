@@ -2,89 +2,111 @@
 <html lang="en" ng-app="app" ng-controller="ctrl">
 
 <head>
-    <meta charset="UTF-8">
-    <title>ngDirective-laydate</title>
-    <style>
-        body {
-            padding: 20px;
-        }
+	<meta charset="UTF-8">
+	<title>ngDirective-laydate</title>
+	<style>
+		body {
+			padding: 20px;
+		}
 
-        input {
-            padding-left: 10px;
-            height: 38px;
-            min-width: 262px;
-            line-height: 38px;
-            border: 1px solid #e6e6e6;
-            background-color: #fff;
-            border-radius: 2px;
-        }
-    </style>
+		input {
+			padding-left: 10px;
+			height: 38px;
+			min-width: 262px;
+			line-height: 38px;
+			border: 1px solid #e6e6e6;
+			background-color: #fff;
+			border-radius: 2px;
+		}
+
+		hr {
+			height: 1px;
+			border: none;
+			border-top: 1px solid silver;
+		}
+	</style>
 </head>
 
 <body>
-    <p>默认</p>
-    <input ng-lay-date type="text" ng-model="date" />
-    <div hljs hljs-source="date"></div>
+	<p>默认</p>
+	<input ng-lay-date type="text" ng-model="date" />
+	<span>赋值（今天）</span>
+	<button ng-click="setDate('today')">new Date()</button>
+	<div hljs hljs-source="date.toString()"></div>
+	<hr>
 
-    <p>时间范围+格式化</p>
-    <input ng-lay-date type="text" ng-model="date1" range="~" format="yyyy-MM-dd HH:mm:ss" />
-    <div hljs hljs-source="toPrettyJSON(date1, tabWidth)"></div>
+	<p>时间范围+格式化</p>
+	<input ng-lay-date type="text" ng-model="date1" range="~" format="yyyy-MM-dd HH:mm:ss" />
+	<div hljs hljs-source="toPrettyJSON(date1, tabWidth)"></div>
+	<hr>
 
-    <p>格式化 年-月</p>
-    <input ng-lay-date type="text" ng-model="date2" format="yyyy-MM" />
-    <div hljs hljs-source="date2"></div>
+	<p>格式化 年-月</p>
+	<input ng-lay-date type="text" ng-model="date2" format="yyyy-MM" />
+	<div hljs hljs-source="date2"></div>
+	<hr>
 
+	<p>时间</p>
+	<input ng-lay-date type="text" ng-model="date3" range="~" format="HH:mm:ss" />
+	<div hljs hljs-source="toPrettyJSON(date3, tabWidth)"></div>
+	<hr>
 
-    <p>时间</p>
-    <input ng-lay-date type="text" ng-model="date3" range="~" format="HH:mm:ss" />
-    <div hljs hljs-source="toPrettyJSON(date3, tabWidth)"></div>
+	<p>时间范围+格式化+双向绑定</p>
+	<input ng-lay-date type="text" ng-model="myDate.value" range="~" format="{{myDate.format}}">
+	<span>赋值2013-01-29 13:14:11 ~ 2018-04-17 10:51:00</span>
+	<button ng-click="setRange()">set range</button>
+	<div hljs hljs-source="toPrettyJSON(myDate, tabWidth)"></div>
 
+	<script src="angular.js"></script>
+	<script src="jquery.min.js"></script>
+	<script src="laydate/laydate.js"></script>
+	<script src="ngLayDate.js"></script>
+	<link href="https://cdn.bootcss.com/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet">
+	<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+	<script src="https://pc035860.github.io/angular-highlightjs/angular-highlightjs.min.js"></script>
 
-    <p>时间范围+格式化+双向绑定</p>
-    <input ng-lay-date type="text" ng-model="myDate.value" range="{{myDate.range}}" format="{{myDate.format}}">
-    <div hljs hljs-source="toPrettyJSON(myDate, tabWidth)"></div>
-
-    <script src="angular.js"></script>
-    <script src="jquery.min.js"></script>
-    <script src="laydate/laydate.js"></script>
-    <script src="ngLayDate.js"></script>
-    <link href="https://cdn.bootcss.com/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
-    <script src="https://pc035860.github.io/angular-highlightjs/angular-highlightjs.min.js"></script>
-
-    <script>
-        var app = angular.module('app', ['ngLayDate', 'hljs']);
-        app.controller('ctrl', function ($scope) {
-            $scope.myDate = {
-                value: {
-                    "startDate": "2018-04-03 00:00:00",
-                    "endDate": "2018-04-19 00:00:00"
-                },
-                format: 'yyyy-MM-dd HH:mm:ss',
-                range: '到'
-            };
-
-            $scope.tabWidth = 4;
-
-
-            $scope.toPrettyJSON = function (objStr, tabWidth) {
-                var _lastGoodResult = '';
-                var result = '';
-                if (objStr instanceof Object) {
-                    result = JSON.stringify(objStr, null, Number(tabWidth));
-                } else {
-                    try {
-                        var obj = $parse(objStr)({});
-                    } catch (e) {
-                        // eat $parse error
-                        return _lastGoodResult;
-                    }
-                }
-                _lastGoodResult = result;
-                return result;
-            };
-        })
-    </script>
+	<script>
+		var app = angular.module('app', ['ngLayDate', 'hljs']);
+		app.controller('ctrl', function ($scope) {
+			$scope.myDate = {
+				value: {
+					"startDate": "2018-04-03 00:00:00",
+					"endDate": "2018-04-19 00:00:00"
+				},
+				format: 'yyyy-MM-dd HH:mm:ss'
+			};
+			$scope.setDate = function (d) {
+				if (d === 'today') {
+					$scope.date = new Date()
+				}
+			}
+			$scope.setRange = function () {
+				$scope.myDate = {
+					value: {
+						"startDate": "2013-01-29 13:14:11",
+						"endDate": "2018-04-17 10:51:00"
+					},
+					format: 'yyyy-MM-dd HH:mm:ss'
+				};
+			}
+			$scope.tabWidth = 4;
+			$scope.toPrettyJSON = function (objStr, tabWidth) {
+				var _lastGoodResult = '';
+				var result = '';
+				if (objStr instanceof Object) {
+					result = JSON.stringify(objStr, null, Number(tabWidth));
+				} else {
+					try {
+						var obj = $parse(objStr)({});
+					} catch (e) {
+						// eat $parse error
+						return _lastGoodResult;
+					}
+				}
+				_lastGoodResult = result;
+				return result;
+			};
+		})
+	</script>
 </body>
 
 </html>
