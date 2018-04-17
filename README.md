@@ -5,7 +5,7 @@
 * [layui](http:///www.layui.com/doc/modules/laydate.html#value)
 * [layDate](http://www.layui.com/laydate/)
 
-# 使用
+## 使用
 
 ```html
     <!--默认-->
